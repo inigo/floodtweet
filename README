@@ -1,0 +1,34 @@
+Scrape river level information from the Environment Agency website, and republish it on Twitter.
+
+Setup
+=====
+
+Create a conf/twitter4j.properties file, with the following Twitter properties:
+    oauth.consumerKey=
+    oauth.consumerSecret=
+    oauth.accessToken=
+    oauth.accessTokenSecret=
+
+(you can get the various keys and tokens from Twitter at https://dev.twitter.com/apps)
+
+The app is built with Play and Scala - install Play from http://playframework.org/, and
+run with "play run".
+
+License
+=======
+
+Copyright (C) 2013 Inigo Surguy. Licensed under the GNU General Public License v3 - see LICENSE.txt for details.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+

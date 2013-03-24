@@ -1,0 +1,16 @@
+logs
+project/project
+project/target
+target
+tmp
+.history
+dist
+
+conf/version.properties
+.idea
+.idea_modules
+
+*.db
+lucene_index
+
+conf/twitter4j.properties

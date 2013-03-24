@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Display log messages to the console. Note the minimal output pattern for date and class: this is to simplify viewing on screen -->
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss} %-5p %-25c{1} :: %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Log every log message to the cqa-full log file, rolling over every 10MB, with a maximum of 10 files -->
+    <appender name="fullLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/floodtweet-full.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>logs/floodtweet-full.%i.log</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>10</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
+
+        <encoder>
+            <pattern>%d [%thread] %-5level %logger :: %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Log INFO level messages and above to the cqa-info.log, rolling over every 10MB, with a maximum of 10 files -->
+    <appender name="infoLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/floodtweet-info.log</file>
+
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>logs/floodtweet-info.%i.log</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>10</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
+
+        <encoder>
+            <pattern>%d [%thread] %-5level %logger :: %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="net.surguy" level="DEBUG"/>
+
+    <root level="WARN">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="fullLog"/>
+        <appender-ref ref="infoLog"/>
+    </root>
+</configuration>
