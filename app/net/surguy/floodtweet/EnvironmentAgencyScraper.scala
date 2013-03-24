@@ -18,13 +18,18 @@ class EnvironmentAgencyScraper {
 
   private val baseStationUrl = "http://www.environment-agency.gov.uk/homeandleisure/floods/riverlevels/136495.aspx?stationId=%s"
 
-  def scrapeLevel(stationId: String): (Station, Measurement) = {
-    val url = baseStationUrl.format(stationId)
-    driver.get(url)
-    Thread.sleep(1000) // Not sure why this is needed - but the station data is not present in the driver without a pause
-    val station = retrieveStationFromPage(stationId)
-    val measurement = retrieveMeasurementFromPage(stationId)
-    (station, measurement)
+  def scrapeLevel(stationId: String): (Option[Station], Option[Measurement]) = {
+    try {
+      val url = baseStationUrl.format(stationId)
+      driver.get(url)
+      Thread.sleep(1000) // Not sure why this is needed - but the station data is not present in the driver without a pause
+      val station = retrieveStationFromPage(stationId)
+      val measurement = retrieveMeasurementFromPage(stationId)
+      (Some(station), Some(measurement))
+    }
+    catch {
+      case e: Exception => (None, None)
+    }
   }
 
   private def retrieveStationFromPage(stationId: String) = {

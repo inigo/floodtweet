@@ -14,21 +14,27 @@ class ScraperTrigger extends Job {
   }
 }
 
-object ScraperTrigger {
+object ScraperTrigger extends Logging {
   private val lastMeasurements = new mutable.HashMap[String, Measurement]()
   private val scraper = new EnvironmentAgencyScraper()
   private val tweeter = new Tweeter()
 
-  private val stationIds = List("7075")
+  private val stationIds = List("7075", "7074", "7057")
 
   def scrapeAll() { stationIds.foreach(scrape) }
 
   def scrape(stationId: String) {
-    val (station, measurement) = scraper.scrapeLevel(stationId)
-    if (!lastMeasurements.contains(stationId) || measurement.takenAt.isAfter(lastMeasurements(stationId).takenAt)) {
-      lastMeasurements(stationId) = measurement
-      if (measurement.currentLevel > measurement.typicalHigh) tweeter.tweet(station, measurement)
+    scraper.scrapeLevel(stationId) match {
+      case (Some(station), Some(measurement)) =>
+        if (!lastMeasurements.contains(stationId) || measurement.takenAt.isAfter(lastMeasurements(stationId).takenAt)) {
+          log.debug("Retrieved measurement "+measurement)
+          lastMeasurements(stationId) = measurement
+          if (measurement.currentLevel > measurement.typicalHigh) tweeter.tweet(station, measurement)
+        }
+      case _ =>
+        log.info("Could not scrape "+stationId)
     }
   }
 
+  def getLatest = lastMeasurements.toMap
 }

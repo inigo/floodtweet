@@ -1,9 +1,18 @@
-@(message: String)
+@(measurements: Map[String, net.surguy.floodtweet.Measurement])
 
-@main("Welcome to Play 2.1") {
+@main("floodTweet") {
 
     <h1>floodTweet - Scrape river level information from the Environment Agency website, and republish it on Twitter</h1>
 
-    <p>@message</p>
+    <h2>Last measurements</h2>
+    <ul>
+        @measurements.values.map{ m =>
+            <li>@m.stationId - @m.currentLevel m</li>
+        }
+    </ul>
 
+    <!--suppress HtmlUnknownTarget -->
+    <form action="/trigger" method="post">
+        <input type="submit" value="Check now"/>
+    </form>
 }

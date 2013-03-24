@@ -9,11 +9,12 @@ import play.api
 /**
  * Application config - sets up the schedules.
  */
-object Global extends GlobalSettings {
+object Global extends GlobalSettings with Logging {
   // This cannot be an immutable val, because it cannot be restarted after it is stopped, which happens when developing
   var scheduler: Scheduler = null
 
   override def onStart(app: api.Application) {
+    log.info("Starting application")
     val conf = ConfigFactory.load()
 
     // Set up the scheduler, using Quartz cron expressions
@@ -23,6 +24,7 @@ object Global extends GlobalSettings {
   }
 
   private def schedule(clazz: Class[_ <: Job], cronExpression: String) {
+    log.debug("Scheduling job "+clazz+" to run at "+cronExpression)
     val job = JobBuilder.newJob(clazz).build()
     val trigger = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule(cronExpression)).build()
     scheduler.scheduleJob(job, trigger)
@@ -30,5 +32,6 @@ object Global extends GlobalSettings {
 
   override def onStop(app: api.Application) {
     super.onStop(app)
+    log.info("Shutting down application")
   }
 }

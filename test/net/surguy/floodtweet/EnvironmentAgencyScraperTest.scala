@@ -10,10 +10,10 @@ class EnvironmentAgencyScraperTest extends Specification {
   val id = "7075"
 
   "retrieving data for Bulstake" should {
-    "identify the station" in { scraper.scrapeLevel(id)._1 mustEqual(Station(id, "New Botley", "Bulstake Stream"))  }
+    "identify the station" in { scraper.scrapeLevel(id)._1.get mustEqual(Station(id, "New Botley", "Bulstake Stream"))  }
     // This needs to be working against a saved file
     "identify the measurement" in {
-      scraper.scrapeLevel(id)._2 mustEqual(Measurement(id, new DateTime(2013, 3, 24, 9, 0), 2.12D, 0.87D, 1.95D))
+      scraper.scrapeLevel(id)._2.get mustEqual(Measurement(id, new DateTime(2013, 3, 24, 9, 0), 2.12D, 0.87D, 1.95D))
     }
   }
 
