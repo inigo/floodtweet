@@ -29,4 +29,20 @@ class Tweeter {
     twitter.updateStatus(msg)
   }
 
+  def formatLevelGraph(measurements: Seq[Measurement]) = {
+    def percentageAboveNormal(m: Measurement) = (m.currentLevel - m.typicalHigh) / (m.currentLevel - m.typicalHigh * 2)
+    measurements.map(percentageAboveNormal).map(toBlock)
+  }
+
+  def toBlock(percentage: Double) = percentage match {
+    case _ if percentage < (1/8) => "▁"
+    case _ if percentage < (2/8) => "▂"
+    case _ if percentage < (3/8) => "▃"
+    case _ if percentage < (4/8) => "▄"
+    case _ if percentage < (5/8) => "▅"
+    case _ if percentage < (6/8) => "▆"
+    case _ if percentage < (7/8) => "▇"
+    case _ => "█"
+  }
+
 }
