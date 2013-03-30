@@ -6,6 +6,7 @@ import java.util.Date
 import org.openqa.selenium.By
 import org.joda.time.DateTime
 import org.joda.time.format.{DateTimeFormat, ISODateTimeFormat}
+import models.{Guid, Measurement, Station}
 
 /**
  * Retrieve measurement and station information from the Environment Agency River Levels website
@@ -18,7 +19,7 @@ class EnvironmentAgencyScraper {
 
   private val baseStationUrl = "http://www.environment-agency.gov.uk/homeandleisure/floods/riverlevels/136495.aspx?stationId=%s"
 
-  def scrapeLevel(stationId: String): (Option[Station], Option[Measurement]) = {
+  def scrapeLevel(stationId: Long): (Option[Station], Option[Measurement]) = {
     try {
       val url = baseStationUrl.format(stationId)
       driver.get(url)
@@ -32,14 +33,14 @@ class EnvironmentAgencyScraper {
     }
   }
 
-  private def retrieveStationFromPage(stationId: String) = {
+  private def retrieveStationFromPage(stationId: Long) = {
     val stationDataEl = driver.findElement(By.xpath("//div[h2='Station data']"))
     val name = extractValue(stationDataEl.findElement(By.xpath("ul/li[1]")).getText)
     val watercourse = extractValue(stationDataEl.findElement(By.xpath("ul/li[3]")).getText)
     Station(stationId, name, watercourse)
   }
 
-  private def retrieveMeasurementFromPage(stationId: String) = {
+  private def retrieveMeasurementFromPage(stationId: Long) = {
     val currentLevelText = extractValue(driver.findElement(By.xpath("//div[@class='chart-top']/h3")).getText)
     val currentLevel = currentLevelText.replaceAll("m","").toDouble
 
@@ -55,7 +56,7 @@ class EnvironmentAgencyScraper {
     val typicalLow = typicalLevelText.replaceAll(".*? between ([\\d+\\.]+).*", "$1").toDouble
     val typicalHigh = typicalLevelText.replaceAll(".*? and ([\\d+\\.]+).*", "$1").toDouble
 
-    Measurement(stationId, takenAt, currentLevel, typicalLow, typicalHigh)
+    Measurement(Guid.next, stationId, takenAt, currentLevel, typicalLow, typicalHigh)
   }
 
   private def extractValue(s: String) =

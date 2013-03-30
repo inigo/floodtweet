@@ -1,4 +1,4 @@
-@(measurements: Map[String, net.surguy.floodtweet.Measurement])
+@(measurements: Map[Long, Measurement])
 
 @main("floodTweet") {
 
@@ -7,7 +7,7 @@
     <h2>Last measurements</h2>
     <ul>
         @measurements.values.map{ m =>
-            <li>@m.stationId - @m.currentLevel m</li>
+            <li>@m.stationId - @m.level m</li>
         }
     </ul>
 

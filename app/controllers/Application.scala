@@ -6,11 +6,11 @@ import net.surguy.floodtweet.ScraperTrigger
 object Application extends Controller {
   
   def index = Action {
-    Ok(views.html.index(ScraperTrigger.getLatest))
+    Ok(views.html.index(ScraperTrigger.scraper.getLatest))
   }
 
   def trigger = Action {
-    ScraperTrigger.scrapeAll()
+    ScraperTrigger.scraper.scrapeAll()
     Redirect("/")
   }
 }

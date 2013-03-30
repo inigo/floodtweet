@@ -1,6 +1,7 @@
 package net.surguy.floodtweet
 
 import twitter4j.TwitterFactory
+import models.{Station, Measurement}
 
 /**
  * Tweets a river level message.
@@ -16,11 +17,11 @@ class Tweeter {
 
   private def formatMessage(station: Station, measurement: Measurement) = {
     measurement match {
-      case _ if measurement.currentLevel > (measurement.typicalHigh*1.5) =>
-        "RIVER VERY HIGH at %s - at %s m compared to typical high of %s m".format(station.name, measurement.currentLevel, measurement.typicalHigh)
-      case _ if measurement.currentLevel > measurement.typicalHigh =>
-        "RIVER HIGH at %s - at %s m compared to typical high of %s m".format(station.name, measurement.currentLevel, measurement.typicalHigh)
-      case _ => "River level at %s is at %s m".format(station.name, measurement.currentLevel)
+      case _ if measurement.level > (measurement.typicalHigh*1.5) =>
+        "RIVER VERY HIGH at %s - at %s m compared to typical high of %s m".format(station.name, measurement.level, measurement.typicalHigh)
+      case _ if measurement.level > measurement.typicalHigh =>
+        "RIVER HIGH at %s - at %s m compared to typical high of %s m".format(station.name, measurement.level, measurement.typicalHigh)
+      case _ => "River level at %s is at %s m".format(station.name, measurement.level)
     }
   }
 
@@ -30,7 +31,7 @@ class Tweeter {
   }
 
   def formatLevelGraph(measurements: Seq[Measurement]) = {
-    def percentageAboveNormal(m: Measurement) = (m.currentLevel - m.typicalHigh) / (m.currentLevel - m.typicalHigh * 2)
+    def percentageAboveNormal(m: Measurement) = (m.level - m.typicalHigh) / (m.level - m.typicalHigh * 2)
     measurements.map(percentageAboveNormal).map(toBlock)
   }
 

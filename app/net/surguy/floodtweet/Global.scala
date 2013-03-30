@@ -20,7 +20,7 @@ object Global extends GlobalSettings with Logging {
     // Set up the scheduler, using Quartz cron expressions
     scheduler = StdSchedulerFactory.getDefaultScheduler
     scheduler.start()
-    schedule(classOf[ScraperTrigger], conf.getString("scraper.schedule"))
+    schedule(classOf[ScraperTriggerJob], conf.getString("scraper.schedule"))
   }
 
   private def schedule(clazz: Class[_ <: Job], cronExpression: String) {
