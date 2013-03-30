@@ -1,9 +1,6 @@
 @(measurements: Map[Long, Measurement])
 
 @main("floodTweet") {
-
-    <h1>floodTweet - Scrape river level information from the Environment Agency website, and republish it on Twitter</h1>
-
     <h2>Last measurements</h2>
     <ul>
         @measurements.values.map{ m =>
@@ -13,6 +10,6 @@
 
     <!--suppress HtmlUnknownTarget -->
     <form action="/trigger" method="post">
-        <input type="submit" value="Check now"/>
+        <input type="submit" class="btn btn-primary" value="Check now"/>
     </form>
 }
