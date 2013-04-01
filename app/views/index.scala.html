@@ -1,4 +1,4 @@
-@(stations: List[(Station, String)])
+@(stations: List[(Station, String)], targets: List[HarvestTarget])
 
 @main("floodTweet") {
     <h2>Last measurements</h2>
@@ -7,6 +7,24 @@
             <li><span class="station">@s._1.name</span> : <span class="message">@s._2</span></li>
         }
     </ul>
+
+   <h2>Targets to harvest</h2>
+    <ul>
+        @targets.map{ t =>
+            <li>
+                <form action="/deleteTarget" method="get">
+                    <input type="hidden" name="stationId" value="@t.stationId"/>
+                    <input type="submit" class="btn btn-danger" value="Stop monitoring @t.stationId"/>
+                </form>
+            </li>
+        }
+    </ul>
+
+    <form action="/addTarget" method="get">
+        <label for="stationId">Station ID:</label>
+        <input id="stationId" name="stationId" type="text" required />
+        <input type="submit" class="btn btn-primary" value="Add target"/>
+    </form>
 
     <!--suppress HtmlUnknownTarget -->
     <form action="/trigger" method="post">

@@ -5,6 +5,8 @@ import org.quartz._
 import com.typesafe.config.ConfigFactory
 import org.quartz.impl.StdSchedulerFactory
 import play.api
+import models.HarvestTargets
+import scala.collection.JavaConversions._
 
 /**
  * Application config - sets up the schedules.
@@ -16,6 +18,12 @@ object Global extends GlobalSettings with Logging {
   override def onStart(app: api.Application) {
     log.info("Starting application")
     val conf = ConfigFactory.load()
+
+    if (HarvestTargets.all().size == 0) {
+      val targets = conf.getLongList("defaultTargets")
+      log.info("No harvest targets found in db - loading defaults : "+targets)
+      targets.foreach(l => HarvestTargets.create(l))
+    }
 
     // Set up the scheduler, using Quartz cron expressions
     scheduler = StdSchedulerFactory.getDefaultScheduler

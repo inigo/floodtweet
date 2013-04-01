@@ -1,7 +1,7 @@
 package net.surguy.floodtweet
 
 import org.quartz.{JobExecutionContext, Job}
-import models.{Stations, Measurements}
+import models.{HarvestTargets, Stations, Measurements}
 
 /**
  * Quartz job that launches the "scrape then tweet" process.
@@ -19,12 +19,12 @@ object ScraperTrigger {
 }
 
 class ScraperTrigger(val scraper: EnvironmentAgencyScraper, val tweeter: Tweeter) extends Logging {
-  private val stationIds = List(7075L, 7074L, 7057L)
   private val previousCount = 10
 
-  def scrapeAll() { stationIds.foreach(scrape) }
+  def scrapeAll() { HarvestTargets.all().foreach( s => scrape(s.stationId) ) }
 
   def scrape(stationId: Long) {
+    log.debug("Starting scrape for station "+stationId)
     scraper.scrapeLevel(stationId) match {
       case (Some(station), Some(measurement)) =>
         val last = Measurements.lastMeasurementFor(stationId)

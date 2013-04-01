@@ -19,16 +19,18 @@ CREATE TABLE "measurement" (
 
 CREATE UNIQUE INDEX measurement_details_idx ON "measurement" ("stationId", "takenAt");
 
-CREATE TABLE "harvesttargets" (
+CREATE TABLE "harvesttarget" (
     "guid" char(36) NOT NULL,
     "stationId" integer NOT NULL
 );
 
+CREATE UNIQUE INDEX harvesttargets_idx ON "harvesttarget" ("stationId");
+
 # --- !Downs
+DROP INDEX harvesttargets_idx ON "harvesttarget";
+DROP TABLE "harvesttarget";
 
-DROP TABLE "harvesttargets";
-
-DROP INDEX "measurement_details_idx";
+DROP INDEX measurement_details_idx ON "measurement";
 DROP TABLE "measurement";
 
 DROP TABLE "station";
