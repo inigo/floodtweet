@@ -48,12 +48,10 @@ object Measurements extends UsesDatabase {
   }
 
   def lastN(stationId: Long, count: Int): List[Measurement] = database.withSession { implicit s: Session =>
-    (for(t <- MeasurementTable.sortBy(_.takenAt) if t.stationId === stationId) yield t.*).take(count).list
+    (for(t <- MeasurementTable.sortBy(_.takenAt.desc) if t.stationId === stationId) yield t.*).take(count).list.reverse
   }
 
-  def lastMeasurementFor(stationId: Long): Option[Measurement] = database.withSession { implicit s: Session =>
-    (for(t <- MeasurementTable.sortBy(_.takenAt) if t.stationId === stationId ) yield t.*).firstOption
-  }
+  def lastMeasurementFor(stationId: Long): Option[Measurement] = lastN(stationId, 1).headOption
 
   def create(m: Measurement): Option[Measurement] = { database.withSession { implicit s: Session =>
     MeasurementTable.*.insert( m )

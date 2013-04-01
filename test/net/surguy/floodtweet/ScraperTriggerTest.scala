@@ -17,7 +17,8 @@ class ScraperTriggerTest extends Specification with Mockito {
     val now = DateTime.now
     val testStation = Station(7075L, "Test", "River")
     scraper.scrapeLevel(7075L) returns ((Some(testStation), Some(meas(2.1, before)))) thenReturns
-      ((Some(testStation), Some(meas(2.1, before)))) thenReturns ((Some(testStation), Some(meas(2.2, now))))
+      ((Some(testStation), Some(meas(2.1, before)))) thenReturns ((Some(testStation), Some(meas(2.2, now)))) thenReturns
+      ((Some(testStation), Some(meas(2.2, now))))
     scraper
   }
 
@@ -32,6 +33,8 @@ class ScraperTriggerTest extends Specification with Mockito {
         there was one(tweeter).tweet(any[Station], any[Seq[Measurement]])
         scraperTrigger.scrape(7075L)
         there were two(tweeter).tweet(any[Station], any[Seq[Measurement]])
+        scraperTrigger.scrape(7075L)
+        there were two(tweeter).tweet(any[Station], any[Seq[Measurement]])
       }
     }
     "not store duplicate measurements in the database" in {
@@ -41,6 +44,8 @@ class ScraperTriggerTest extends Specification with Mockito {
         Measurements.all() must haveSize(1)
         scraperTrigger.scrape(7075L)
         Measurements.all() must haveSize(1)
+        scraperTrigger.scrape(7075L)
+        Measurements.all() must haveSize(2)
         scraperTrigger.scrape(7075L)
         Measurements.all() must haveSize(2)
       }
