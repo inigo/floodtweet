@@ -36,7 +36,17 @@ class MeasurementsTest extends Specification {
     }
   }
 
-  def createDummyData() {
+  "creating measurements" should {
+    "store and retrieve measurements" in {
+      running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
+        Stations.create(Station(100, "Test", "Test River"))
+        Measurements.create(Measurement(Guid.next, 100L, DateTime.now(), 2.5D, 1.0D, 2.0D))
+        Measurements.allForStation(100L) must haveLength(1)
+      }
+    }
+  }
+
+  private def createDummyData() {
     Stations.create(new Station(stationId, "Test", "River"))
     val measurements = List(Measurement(Guid.next, stationId, now, 1.3, 1.0, 2.0)
       , Measurement(Guid.next, stationId, now.minusHours(1), 1.2, 1.0, 2.0)

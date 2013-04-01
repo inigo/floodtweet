@@ -1,6 +1,7 @@
 package models
 
 import scala.slick.driver.H2Driver.simple._
+import net.surguy.floodtweet.Logging
 
 /**
  * A measuring station.
@@ -15,13 +16,14 @@ object StationTable extends Table[Station]("station") {
   def * = id ~ name ~ watercourse  <> (Station, Station.unapply _)
 }
 
-object Stations extends UsesDatabase {
+object Stations extends UsesDatabase with Logging {
 
   def all(): List[Station] = database.withSession { implicit s: Session =>
     (for(t <- StationTable) yield t.*).list
   }
 
   def create(station: Station): Option[Station] = { database.withSession { implicit s: Session =>
+    log.info("Creating a new station - " + station)
     StationTable.*.insert( station )
     Some(station)
   }}

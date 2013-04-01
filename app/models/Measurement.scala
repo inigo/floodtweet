@@ -5,6 +5,7 @@ import java.sql.Timestamp
 import org.joda.time.DateTime
 import scala.Predef._
 import scala.{Double, Long, Some}
+import net.surguy.floodtweet.Logging
 
 /**
  * An individual river level measurement.
@@ -33,7 +34,7 @@ object MeasurementTable extends Table[Measurement]("measurement") {
   def fkDocumentTable = foreignKey("station_fk", stationId, StationTable)(_.id)
 }
 
-object Measurements extends UsesDatabase {
+object Measurements extends UsesDatabase with Logging {
 
   def all(): List[Measurement] = database.withSession { implicit s: Session =>
     (for(t <- MeasurementTable) yield t.*).list
@@ -54,6 +55,7 @@ object Measurements extends UsesDatabase {
   def lastMeasurementFor(stationId: Long): Option[Measurement] = lastN(stationId, 1).headOption
 
   def create(m: Measurement): Option[Measurement] = { database.withSession { implicit s: Session =>
+    log.debug("Creating a new measurement : " + m)
     MeasurementTable.*.insert( m )
     Some(m)
   }}

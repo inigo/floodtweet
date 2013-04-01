@@ -1,9 +1,7 @@
 package net.surguy.floodtweet
 
 import org.quartz.{JobExecutionContext, Job}
-import collection.mutable
-import models.{Stations, Measurements, Measurement}
-import org.joda.time.DateTime
+import models.{Stations, Measurements}
 
 /**
  * Quartz job that launches the "scrape then tweet" process.

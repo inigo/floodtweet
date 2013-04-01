@@ -2,17 +2,15 @@ package net.surguy.floodtweet
 
 import com.gargoylesoftware.htmlunit.BrowserVersion
 import org.openqa.selenium.htmlunit.HtmlUnitDriver
-import java.util.Date
 import org.openqa.selenium.By
-import org.joda.time.DateTime
-import org.joda.time.format.{DateTimeFormat, ISODateTimeFormat}
+import org.joda.time.format.DateTimeFormat
 import models.{Guid, Measurement, Station}
 
 /**
  * Retrieve measurement and station information from the Environment Agency River Levels website
  * at http://www.environment-agency.gov.uk/homeandleisure/floods/riverlevels/
  */
-class EnvironmentAgencyScraper {
+class EnvironmentAgencyScraper extends Logging {
 
   private[floodtweet] val driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_10)
   driver.setJavascriptEnabled(true)
@@ -22,6 +20,7 @@ class EnvironmentAgencyScraper {
   def scrapeLevel(stationId: Long): (Option[Station], Option[Measurement]) = {
     try {
       val url = baseStationUrl.format(stationId)
+      log.debug("Scraping info from "+url)
       driver.get(url)
       Thread.sleep(1000) // Not sure why this is needed - but the station data is not present in the driver without a pause
       val station = retrieveStationFromPage(stationId)
@@ -29,7 +28,9 @@ class EnvironmentAgencyScraper {
       (Some(station), Some(measurement))
     }
     catch {
-      case e: Exception => (None, None)
+      case e: Exception =>
+        log.warn("Unable to scrape for station " + stationId + " : " + e, e)
+        (None, None)
     }
   }
 

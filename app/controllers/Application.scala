@@ -1,10 +1,10 @@
 package controllers
 
 import play.api.mvc._
-import net.surguy.floodtweet.{Formatter, ScraperTrigger}
+import net.surguy.floodtweet.{Logging, Formatter, ScraperTrigger}
 import models.{Station, Measurements, Stations}
 
-object Application extends Controller {
+object Application extends Controller with Logging {
   private val formatter = new Formatter()
 
   def index = Action {
@@ -13,6 +13,7 @@ object Application extends Controller {
   }
 
   def trigger = Action {
+    log.info("User triggered scrapeAll")
     ScraperTrigger.scraper.scrapeAll()
     Redirect("/")
   }
