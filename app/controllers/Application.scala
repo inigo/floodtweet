@@ -1,12 +1,15 @@
 package controllers
 
 import play.api.mvc._
-import net.surguy.floodtweet.ScraperTrigger
+import net.surguy.floodtweet.{Formatter, ScraperTrigger}
+import models.{Station, Measurements, Stations}
 
 object Application extends Controller {
-  
+  private val formatter = new Formatter()
+
   def index = Action {
-    Ok(views.html.index(ScraperTrigger.scraper.getLatest))
+    val stationMessages: List[(Station, String)] = Stations.all().map(s => (s, formatter.formatMessage(s, Measurements.lastN(s.id, 10))))
+    Ok(views.html.index(stationMessages))
   }
 
   def trigger = Action {

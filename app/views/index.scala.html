@@ -1,10 +1,10 @@
-@(measurements: Map[Long, Measurement])
+@(stations: List[(Station, String)])
 
 @main("floodTweet") {
     <h2>Last measurements</h2>
     <ul>
-        @measurements.values.map{ m =>
-            <li>@m.stationId - @m.level m</li>
+        @stations.map{ s =>
+            <li><span class="station">@s._1.name</span> : <span class="message">@s._2</span></li>
         }
     </ul>
 
