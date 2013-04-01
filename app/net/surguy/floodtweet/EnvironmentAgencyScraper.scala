@@ -14,7 +14,7 @@ import models.{Guid, Measurement, Station}
  */
 class EnvironmentAgencyScraper {
 
-  private val driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_10)
+  private[floodtweet] val driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_10)
   driver.setJavascriptEnabled(true)
 
   private val baseStationUrl = "http://www.environment-agency.gov.uk/homeandleisure/floods/riverlevels/136495.aspx?stationId=%s"
@@ -33,14 +33,14 @@ class EnvironmentAgencyScraper {
     }
   }
 
-  private def retrieveStationFromPage(stationId: Long) = {
+  private[floodtweet] def retrieveStationFromPage(stationId: Long) = {
     val stationDataEl = driver.findElement(By.xpath("//div[h2='Station data']"))
     val name = extractValue(stationDataEl.findElement(By.xpath("ul/li[1]")).getText)
     val watercourse = extractValue(stationDataEl.findElement(By.xpath("ul/li[3]")).getText)
     Station(stationId, name, watercourse)
   }
 
-  private def retrieveMeasurementFromPage(stationId: Long) = {
+  private[floodtweet] def retrieveMeasurementFromPage(stationId: Long) = {
     val currentLevelText = extractValue(driver.findElement(By.xpath("//div[@class='chart-top']/h3")).getText)
     val currentLevel = currentLevelText.replaceAll("m","").toDouble
 
