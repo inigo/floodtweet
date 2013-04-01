@@ -31,14 +31,16 @@ class ScraperTrigger(val scraper: EnvironmentAgencyScraper, val tweeter: Tweeter
       case (Some(station), Some(measurement)) =>
         val last = Measurements.lastMeasurementFor(stationId)
         if (last.isEmpty || measurement.takenAt.isAfter(last.get.takenAt)) {
-          log.debug("Retrieved measurement "+measurement)
+          log.debug("Retrieved new measurement for station "+stationId+" of "+measurement)
           Stations.createOrUpdate(station)
           Measurements.create(measurement)
           val measurements = Measurements.lastN(stationId, previousCount)
           if (measurement.level > measurement.typicalHigh) tweeter.tweet(station, measurements)
+        } else {
+          log.debug("No new measurements for station "+stationId)
         }
       case _ =>
-        log.info("Could not scrape "+stationId)
+        log.info("Could not scrape station "+stationId)
     }
   }
 

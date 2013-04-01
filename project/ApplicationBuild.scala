@@ -14,6 +14,7 @@ object ApplicationBuild extends Build {
     , "org.seleniumhq.selenium" % "selenium-java" % "2.28.0"
     , "org.quartz-scheduler" % "quartz" % "2.1.6"
     , "joda-time" % "joda-time" % "2.1"
+    , "org.mockito" % "mockito-all" % "1.9.0"
   )
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
