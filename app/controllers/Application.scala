@@ -9,9 +9,20 @@ object Application extends Controller with Logging {
   private val formatter = new Formatter()
 
   def index = Action {
-    val stationMessages: List[(Station, String)] = Stations.all().map(s => (s, formatter.formatMessage(s, Measurements.lastN(s.id, 10))))
     val targets = HarvestTargets.all()
-    Ok(views.html.index(stationMessages, targets))
+    val allStations = Stations.all()
+    val stationMessages: List[(Long, Option[Station], List[Measurement], String)] = targets.map{t =>
+      val stationId = t.stationId
+      val station = allStations.find(_.id == stationId)
+      val recentValues = Measurements.lastN(stationId, 10)
+      val message = station match {
+        case Some(s) => formatter.formatMessage(s, recentValues)
+        case None => "No data"
+      }
+      (stationId, station, recentValues, message)
+    }
+
+    Ok(views.html.index(stationMessages))
   }
 
   def trigger = Action {

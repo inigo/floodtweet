@@ -1,33 +1,30 @@
-@(stations: List[(Station, String)], targets: List[HarvestTarget])
+@(stations: List[(Long, Option[Station], List[Measurement], String)])
 
 @main("floodTweet") {
-    <h2>Last measurements</h2>
-    <ul>
+    <h2>Stations monitored</h2>
+    <table class="table table-striped table-bordered">
         @stations.map{ s =>
-            <li><span class="station">@s._1.name</span> : <span class="message">@s._2</span></li>
+            <tr>
+                <td class="station">@s._2.map(_.name).getOrElse("Not yet retrieved")</td>
+                <td class="message">@s._4</td>
+                <td class="actions">
+                    <form action="/deleteTarget" method="get">
+                        <input type="hidden" name="stationId" value="@s._1"/>
+                        <input type="submit" class="btn btn-danger btn-small" value="Stop monitoring @s._1"/>
+                    </form>
+                </td>
+            </tr>
         }
-    </ul>
-
-   <h2>Targets to harvest</h2>
-    <ul>
-        @targets.map{ t =>
-            <li>
-                <form action="/deleteTarget" method="get">
-                    <input type="hidden" name="stationId" value="@t.stationId"/>
-                    <input type="submit" class="btn btn-danger" value="Stop monitoring @t.stationId"/>
-                </form>
-            </li>
-        }
-    </ul>
+    </table>
 
     <form action="/addTarget" method="get">
-        <label for="stationId">Station ID:</label>
+        <label for="stationId">Add new station to monitor with ID:</label>
         <input id="stationId" name="stationId" type="text" required />
-        <input type="submit" class="btn btn-primary" value="Add target"/>
+        <input type="submit" class="btn btn-success" value="Add station"/>
     </form>
 
     <!--suppress HtmlUnknownTarget -->
     <form action="/trigger" method="post">
-        <input type="submit" class="btn btn-primary" value="Check now"/>
+        <input type="submit" class="btn btn-primary" value="Check all stations now"/>
     </form>
 }
