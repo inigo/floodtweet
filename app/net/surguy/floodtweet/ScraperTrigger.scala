@@ -44,14 +44,4 @@ class ScraperTrigger(val scraper: EnvironmentAgencyScraper, val tweeter: Tweeter
     }
   }
 
-  def getLatest: Map[Long, Measurement] = stationIds.map( s =>
-      Measurements.lastMeasurementFor(s) match {
-        case Some(m) => Some((s, m))
-        case None => None
-      }
-    ).flatten.toMap
-  def getLastWeek = stationIds.map( s => (s, Measurements.since(s, daysAgo(7))) ).toMap
-  def getRecent = stationIds.map( s => (s, Measurements.lastN(s, previousCount)) ).toMap
-  private def daysAgo(days: Integer): DateTime = DateTime.now.toDateMidnight.toDateTime.minusDays(days)
-
 }
