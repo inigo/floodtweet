@@ -14,6 +14,9 @@ Create a conf/twitter4j.properties file, with the following Twitter properties:
 The app is built with Play and Scala - install Play from http://playframework.org/, and
 run with "play run".
 
+To change the rivers that are checked, edit the stationIds field in ScraperTrigger. You can find
+ids via the website at http://www.environment-agency.gov.uk/homeandleisure/floods/riverlevels/.
+
 License
 =======
 
