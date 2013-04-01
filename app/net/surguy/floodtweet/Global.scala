@@ -31,7 +31,9 @@ object Global extends GlobalSettings with Logging {
   }
 
   override def onStop(app: api.Application) {
+    log.info("Application is shutting down")
     super.onStop(app)
-    log.info("Shutting down application")
+    if (scheduler!=null) scheduler.shutdown()
+    log.info("Application shutdown complete")
   }
 }
