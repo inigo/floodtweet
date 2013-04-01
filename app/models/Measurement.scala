@@ -43,9 +43,12 @@ object Measurements extends UsesDatabase {
     (for(t <- MeasurementTable if t.stationId === stationId) yield t.*).list
   }
 
-  def lastValues(stationId: Long, since: DateTime): List[Measurement] = database.withSession { implicit s: Session =>
-    (for(t <- MeasurementTable.sortBy(_.takenAt) if t.stationId === stationId && t.takenAt > new Timestamp(since.getMillis)) yield t.*)
-      .list
+  def since(stationId: Long, since: DateTime): List[Measurement] = database.withSession { implicit s: Session =>
+    (for(t <- MeasurementTable.sortBy(_.takenAt) if t.stationId === stationId && t.takenAt > new Timestamp(since.getMillis)) yield t.*).list
+  }
+
+  def lastN(stationId: Long, count: Int): List[Measurement] = database.withSession { implicit s: Session =>
+    (for(t <- MeasurementTable.sortBy(_.takenAt) if t.stationId === stationId) yield t.*).take(count).list
   }
 
   def lastMeasurementFor(stationId: Long): Option[Measurement] = database.withSession { implicit s: Session =>

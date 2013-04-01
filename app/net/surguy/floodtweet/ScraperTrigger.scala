@@ -17,11 +17,12 @@ class ScraperTriggerJob extends Job {
 }
 
 object ScraperTrigger {
-  val scraper = new ScraperTrigger(new EnvironmentAgencyScraper(), new Tweeter())
+  val scraper = new ScraperTrigger(new EnvironmentAgencyScraper(), new Tweeter(new Formatter()))
 }
 
 class ScraperTrigger(val scraper: EnvironmentAgencyScraper, val tweeter: Tweeter) extends Logging {
   private val stationIds = List(7075L, 7074L, 7057L)
+  private val previousCount = 10
 
   def scrapeAll() { stationIds.foreach(scrape) }
 
@@ -33,7 +34,8 @@ class ScraperTrigger(val scraper: EnvironmentAgencyScraper, val tweeter: Tweeter
           log.debug("Retrieved measurement "+measurement)
           Stations.createOrUpdate(station)
           Measurements.create(measurement)
-          if (measurement.level > measurement.typicalHigh) tweeter.tweet(station, measurement)
+          val measurements = Measurements.lastN(stationId, previousCount)
+          if (measurement.level > measurement.typicalHigh) tweeter.tweet(station, measurements)
         }
       case _ =>
         log.info("Could not scrape "+stationId)
@@ -46,7 +48,8 @@ class ScraperTrigger(val scraper: EnvironmentAgencyScraper, val tweeter: Tweeter
         case None => None
       }
     ).flatten.toMap
-  def getLastWeek = stationIds.map( s => (s, Measurements.lastValues(s, daysAgo(7))) ).toMap
+  def getLastWeek = stationIds.map( s => (s, Measurements.since(s, daysAgo(7))) ).toMap
+  def getRecent = stationIds.map( s => (s, Measurements.lastN(s, previousCount)) ).toMap
   private def daysAgo(days: Integer): DateTime = DateTime.now.toDateMidnight.toDateTime.minusDays(days)
 
 }
