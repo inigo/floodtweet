@@ -51,6 +51,8 @@
     </appender>
 
     <logger name="net.surguy" level="DEBUG"/>
+    <!-- The HTML parser is very chatty - raises lots of warnings for CSS issues we can't control -->
+    <logger name="com.gargoylesoftware" level="ERROR"/>
 
     <root level="WARN">
         <appender-ref ref="stdout"/>
