@@ -38,7 +38,7 @@ object Application extends Controller with Logging {
   }
 
   def deleteTarget(stationId: Long) = Action {
-    log.info("Adding new harvest target")
+    log.info("Deleting new harvest target")
     HarvestTargets.delete(stationId)
     Redirect("/")
   }
