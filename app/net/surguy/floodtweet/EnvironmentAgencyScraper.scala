@@ -13,7 +13,7 @@ import models.{Guid, Measurement, Station}
 class EnvironmentAgencyScraper extends Logging {
 
   private[floodtweet] val driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_10)
-  driver.setJavascriptEnabled(true)
+  driver.setJavascriptEnabled(false)
 
   private val baseStationUrl = "http://www.environment-agency.gov.uk/homeandleisure/floods/riverlevels/136495.aspx?stationId=%s"
 
