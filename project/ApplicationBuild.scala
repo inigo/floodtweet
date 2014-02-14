@@ -10,7 +10,7 @@ object ApplicationBuild extends Build {
   val appDependencies = Seq(
     jdbc
     , "com.typesafe.slick" %% "slick" % "1.0.0"
-    , "org.twitter4j" % "twitter4j-core" % "3.0.3"
+    , "org.twitter4j" % "twitter4j-core" % "3.0.5"
     , "org.seleniumhq.selenium" % "selenium-java" % "2.28.0"
     , "org.quartz-scheduler" % "quartz" % "2.1.6"
     , "joda-time" % "joda-time" % "2.1"
